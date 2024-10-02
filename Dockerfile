@@ -36,4 +36,4 @@ WORKDIR /home/ros_bridge/
 
 RUN /ros_entrypoint.sh colcon build --parallel-workers 4 && sed -i '$isource "/home/ros_bridge/install/setup.bash"' /ros_entrypoint.sh
 
-CMD rosparam load mighty_bridge.yaml && ros2 run ros1_bridge dynamic_bridge --bridge-all-topics
+CMD rosparam load /home/ros_bridge/src/ros1_bridge.yaml && ros2 run ros1_bridge parameter_bridge --bridge-all-topics

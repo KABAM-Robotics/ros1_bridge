@@ -110,7 +110,8 @@ create_bridge_from_2_to_1(
   const std::string & ros1_type_name,
   const std::string & ros1_topic_name,
   size_t publisher_queue_size,
-  rclcpp::PublisherBase::SharedPtr ros2_pub = nullptr);
+  rclcpp::PublisherBase::SharedPtr ros2_pub = nullptr,
+  bool latch=false);
 
 Bridge2to1Handles
 create_bridge_from_2_to_1(
@@ -122,7 +123,8 @@ create_bridge_from_2_to_1(
   const std::string & ros1_type_name,
   const std::string & ros1_topic_name,
   size_t publisher_queue_size,
-  rclcpp::PublisherBase::SharedPtr ros2_pub = nullptr);
+  rclcpp::PublisherBase::SharedPtr ros2_pub = nullptr,
+  bool latch=false);
 
 BridgeHandles
 create_bidirectional_bridge(

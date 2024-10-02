@@ -281,16 +281,16 @@ int main(int argc, char * argv[])
       if (!queue_size) {
         queue_size = 100;
       }
-      printf(
+      fprintf(stderr,
         "Trying to create bidirectional bridge for topic '%s' "
         "with ROS 2 type '%s'\n",
         topic_name.c_str(), type_name.c_str());
 
       try {
         if (topics[i].hasMember("qos")) {
-          printf("Setting up QoS for '%s': ", topic_name.c_str());
+          fprintf(stderr, "Setting up QoS for '%s': ", topic_name.c_str());
           auto qos_settings = qos_from_params(topics[i]["qos"]);
-          printf("\n");
+          fprintf(stderr, "\n");
           ros1_bridge::BridgeHandles handles = ros1_bridge::create_bidirectional_bridge(
             ros1_node, ros2_node, "", type_name, topic_name, queue_size, qos_settings);
           all_handles.push_back(handles);
