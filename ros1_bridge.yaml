@@ -30,15 +30,6 @@ topics:
       history: keep_all
       durability: transient_local
       reliability: reliable
-  - 
-    topic: /docking_camera/image
-    type: sensor_msgs/msg/Image
-    queue_size: 1
-    qos:
-      history: keep_last
-      depth: 10
-      durability: volatile
-      reliability: reliable
   -
     topic: /odometry/filtered
     type: nav_msgs/msg/Odometry
@@ -84,3 +75,12 @@ topics:
   -
     topic: /localization_status
     type: std_msgs/msg/Bool
+  -
+    topic: /camera_dock/color/camera_info
+    type: sensor_msgs/msg/CameraInfo
+  -
+    topic: /camera_dock/color/image_raw/compressed
+    type: sensor_msgs/msg/CompressedImage
+  -
+    topic: /camera_dock/color/image_raw
+    type: sensor_msgs/msg/
