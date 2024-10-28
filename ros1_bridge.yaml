@@ -83,4 +83,4 @@ topics:
     type: sensor_msgs/msg/CompressedImage
   -
     topic: /camera_dock/color/image_raw
-    type: sensor_msgs/msg/
+    type: sensor_msgs/msg/Image
