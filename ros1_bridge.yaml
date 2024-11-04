@@ -34,6 +34,9 @@ topics:
     topic: /odometry/filtered
     type: nav_msgs/msg/Odometry
   -
+    topic: /halo_control/odom
+    type: nav_msgs/msg/Odometry
+  -
     topic: /imu/data
     type: sensor_msgs/msg/Imu
   -
