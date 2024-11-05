@@ -4,15 +4,17 @@ topics:
     type: tf2_msgs/msg/TFMessage
     queue_size: 1
     qos:
-      history: keep_all
+      history: keep_last
+      depth: 100
       durability: transient_local
   -
     topic: /tf
     type: tf2_msgs/msg/TFMessage
     queue_size: 1
     qos:
-      history: keep_all
-      durability: transient_local
+      history: keep_last
+      depth: 100
+      durability: volatile
   -
     topic: /scan
     type: sensor_msgs/msg/LaserScan
@@ -30,6 +32,12 @@ topics:
       history: keep_all
       durability: transient_local
       reliability: reliable
+  -
+    topic: /local_costmap/costmap
+    type: nav_msgs/msg/OccupancyGrid
+  -
+    topic: /global_costmap/costmap
+    type: nav_msgs/msg/OccupancyGrid
   -
     topic: /odometry/filtered
     type: nav_msgs/msg/Odometry
