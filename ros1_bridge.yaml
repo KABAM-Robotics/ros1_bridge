@@ -60,7 +60,7 @@ topics:
     topic: /diagnostics_agg
     type: diagnostic_msgs/msg/DiagnosticArray
   -
-    topic: /battery_status
+    topic: /halo_control/battery_status
     type: sensor_msgs/msg/BatteryState
   -
     topic: /cmd_vel
@@ -81,7 +81,7 @@ topics:
     topic: /pcl_pose
     type: geometry_msgs/msg/PoseWithCovarianceStamped
   -
-    topic: /mcu_state
+    topic: /halo_control/mcu_state
     type: std_msgs/msg/Int32
   -
     topic: /localization_status
@@ -95,3 +95,14 @@ topics:
   -
     topic: /camera_dock/color/image_raw
     type: sensor_msgs/msg/Image
+  -
+    topic: /halo_control/emergency_stop
+    type: std_msgs/msg/Bool
+  -
+    topic: /halo_control/scout_status
+    type: diagnostic_msgs/msg/DiagnosticArray
+
+services_1_to_2:
+  -
+    service: /halo_control/release  # ROS 2 service name
+    type: std_srvs/srv/Trigger  # The ROS 2 service type name
