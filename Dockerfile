@@ -30,9 +30,11 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y ros-desktop-dev
 
 WORKDIR /home/ros_bridge/src
-COPY . .
+COPY . ros1_bridge/
 
 WORKDIR /home/ros_bridge/
+
+RUN mv /home/ros_bridge/src/ros1_bridge/move_base_msgs /home/ros_bridge/src/move_base_msgs
 
 RUN /ros_entrypoint.sh colcon build --parallel-workers 4 && sed -i '$isource "/home/ros_bridge/install/setup.bash"' /ros_entrypoint.sh
 

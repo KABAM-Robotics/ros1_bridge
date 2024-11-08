@@ -1,0 +1,9 @@
+-
+  ros1_package_name: 'move_base_msgs'
+  ros1_message_name: 'MoveBaseActionResult'
+  ros2_package_name: 'move_base_msgs'
+  ros1_message_name: 'MoveBaseActionResult'
+  fields_1_to_2:
+    header: header
+    status: status
+    result: result

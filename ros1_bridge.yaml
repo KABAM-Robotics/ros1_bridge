@@ -33,6 +33,12 @@ topics:
       durability: transient_local
       reliability: reliable
   -
+    topic: /move_base/cancel
+    type: actionlib_msgs/msg/GoalID
+  -
+    topic: /move_base/result
+    type: move_base_msgs/msg/MoveBaseActionResult
+  -
     topic: /local_costmap/costmap
     type: nav_msgs/msg/OccupancyGrid
   -
