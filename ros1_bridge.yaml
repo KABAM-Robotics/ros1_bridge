@@ -23,7 +23,7 @@ topics:
       history: keep_last
       depth: 50
       durability: volatile
-      reliability: best_effort
+      reliability: reliable
   -
     topic: /map
     type: nav_msgs/msg/OccupancyGrid
@@ -108,6 +108,12 @@ topics:
     topic: /halo_control/scout_status
     type: diagnostic_msgs/msg/DiagnosticArray
   -
+    topic: /halo_control/drive_status
+    type: diagnostic_msgs/msg/DiagnosticArray
+  -
+    topic: /halo_aux/led_status
+    type: diagnostic_msgs/msg/DiagnosticArray
+  -
     topic: /krane/update_map_annotations
     type: visualization_msgs/msg/MarkerArray
   -
@@ -123,3 +129,18 @@ services_1_to_2:
   -
     service: /halo_control/release  # ROS 2 service name
     type: std_srvs/srv/Trigger  # The ROS 2 service type name
+  -
+    service: /halo_aux/on_led
+    type: std_srvs/srv/Trigger
+  -
+    service: /halo_aux/off_led
+    type: std_srvs/srv/Trigger
+  -
+    service: /halo_aux/on_siren
+    type: std_srvs/srv/Trigger
+  -
+    service: /halo_aux/off_siren
+    type: std_srvs/srv/Trigger
+  -
+    service: /halo_aux/off_aux
+    type: std_srvs/srv/Trigger
