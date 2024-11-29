@@ -90,6 +90,9 @@ topics:
     topic: /halo_control/mcu_state
     type: std_msgs/msg/Int32
   -
+    topic: /halo_control/door_open
+    type: std_msgs/msg/Bool
+  -
     topic: /localization_status
     type: std_msgs/msg/Bool
   -
