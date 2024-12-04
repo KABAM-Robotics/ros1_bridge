@@ -112,7 +112,7 @@ topics:
     type: diagnostic_msgs/msg/DiagnosticArray
   -
     topic: /halo_control/drive_status
-    type: diagnostic_msgs/msg/DiagnosticArray
+    type: diagnostic_msgs/msg/DiagnosticStatus
   -
     topic: /halo_aux/led_status
     type: diagnostic_msgs/msg/DiagnosticArray
