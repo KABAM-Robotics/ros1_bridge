@@ -1,0 +1,5 @@
+repositories:
+  move_base_msgs:
+    type: git
+    url: git@bitbucket.org:cognicept/move_base_msgs.git
+    version: ros2
