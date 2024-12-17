@@ -104,6 +104,11 @@ topics:
   -
     topic: /camera_dock/color/image_raw
     type: sensor_msgs/msg/Image
+    queue_size: 1
+    qos:
+      history: keep_last
+      durability: volatile
+      reliability: reliable
   -
     topic: /halo_control/emergency_stop
     type: std_msgs/msg/Bool
