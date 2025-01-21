@@ -72,6 +72,15 @@ topics:
     topic: /cmd_vel
     type: geometry_msgs/msg/Twist
   -
+    topic: /cmd_vel_teleop
+    type: geometry_msgs/msg/Twist
+  -
+    topic: /cmd_mutex/override
+    type: geometry_msgs/msg/Twist
+  -
+    topic: /kopilot_user_cmd
+    type: geometry_msgs/msg/Twist
+  -
     topic: /cmd_vel_nav
     type: geometry_msgs/msg/Twist
   -
