@@ -141,6 +141,12 @@ topics:
       depth: 1
       durability: transient_local
       reliability: reliable
+  -
+    topic: /autodock_action/status
+    type: actionlib_msgs/msg/GoalStatusArray
+  -
+    topic: /autodock_action/cancel
+    type: actionlib_msgs/msg/GoalID
 
 services_1_to_2:
   -
@@ -160,4 +166,7 @@ services_1_to_2:
     type: std_srvs/srv/Trigger
   -
     service: /halo_aux/off_aux
+    type: std_srvs/srv/Trigger
+  -
+    service: /simple_autodock/dock
     type: std_srvs/srv/Trigger
