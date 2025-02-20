@@ -3,3 +3,7 @@ repositories:
     type: git
     url: git@bitbucket.org:cognicept/move_base_msgs.git
     version: ros2
+  kabam_msgs:
+    type: git
+    url: https://github.com/KABAM-Robotics/kabam_msgs.git
+    version: ros2

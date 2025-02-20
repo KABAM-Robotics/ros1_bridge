@@ -35,6 +35,8 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>move_base_msgs</build_depend>
   <build_depend>xmlrpcpp</build_depend>
+  <build_depend>kabam_msgs</build_depend>
+
 
   <buildtool_export_depend>pkg-config</buildtool_export_depend>
 
@@ -47,6 +49,7 @@
   <exec_depend>rcutils</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>move_base_msgs</exec_depend>
+  <exec_depend>kabam_msgs</exec_depend>
 
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>ament_lint_auto</test_depend>

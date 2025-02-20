@@ -29,6 +29,11 @@ RUN apt-get update -y && apt-get upgrade -y
 
 RUN apt-get install -y ros-desktop-dev
 
+WORKDIR /root/ros1_ws/src
+RUN git clone https://github.com/KABAM-Robotics/kabam_msgs.git -b develop
+WORKDIR /root/ros1_ws
+RUN unset ROS_DISTRO && catkin_make
+
 WORKDIR /home/ros_bridge/src
 COPY . ros1_bridge/
 
@@ -39,7 +44,8 @@ RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 RUN --mount=type=ssh vcs import src < src/ros1_bridge/ros1_bridge.repos --recursive
 
-RUN /ros_entrypoint.sh colcon build --parallel-workers 4 && sed -i '$isource "/home/ros_bridge/install/setup.bash"' /ros_entrypoint.sh
+RUN . "/root/ros1_ws/devel/setup.sh" && . /opt/ros/humble/setup.sh && colcon build --parallel-workers 4 
+RUN sed -i '$isource "/root/ros1_ws/devel/setup.bash"' /ros_entrypoint.sh && sed -i '$isource "/home/ros_bridge/install/setup.bash"' /ros_entrypoint.sh
 
 CMD rosparam load /home/ros_bridge/src/ros1_bridge.yaml && ros2 run ros1_bridge parameter_bridge --bridge-all-topics
 

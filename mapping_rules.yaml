@@ -7,3 +7,12 @@
     header: header
     status: status
     result: result
+-
+  ros1_package_name: 'kabam_msgs'
+  ros1_service_name: 'ParamTrigger'
+  ros2_package_name: 'kabam_msgs'
+  ros2_service_name: 'ParamTrigger'
+  request_fields_1_to_2:
+    parameter_list: parameter_list
+  response_fields_1_to_2:
+    success: success

@@ -170,3 +170,6 @@ services_1_to_2:
   -
     service: /simple_autodock/dock
     type: std_srvs/srv/Trigger
+  -
+    service: /annotation_param_service/y_offset
+    type: kabam_msgs/srv/ParamTrigger
