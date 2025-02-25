@@ -131,7 +131,7 @@ topics:
     topic: /halo_aux/led_status
     type: diagnostic_msgs/msg/DiagnosticArray
   -
-    topic: /krane/update_map_annotations
+    topic: /krane/smartplus/update_map_annotations
     type: visualization_msgs/msg/MarkerArray
   -
     topic: /krane/map_annotations/no_go_zones
@@ -169,6 +169,12 @@ services_1_to_2:
     type: std_srvs/srv/Trigger
   -
     service: /simple_autodock/dock
+    type: std_srvs/srv/Trigger
+  -
+    service: /annotation_state/on
+    type: std_srvs/srv/Trigger
+  -
+    service: /annotation_state/off
     type: std_srvs/srv/Trigger
   -
     service: /annotation_param_service/y_offset
