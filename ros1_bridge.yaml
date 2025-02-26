@@ -147,6 +147,9 @@ topics:
   -
     topic: /autodock_action/cancel
     type: actionlib_msgs/msg/GoalID
+  -
+    topic: /krane/current_state
+    type: std_msgs/msg/String
 
 services_1_to_2:
   -
