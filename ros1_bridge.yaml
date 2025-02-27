@@ -150,6 +150,9 @@ topics:
   -
     topic: /krane/current_state
     type: std_msgs/msg/String
+  -
+    topic: /krane/active_map
+    type: std_msgs/msg/String
 
 services_1_to_2:
   -
