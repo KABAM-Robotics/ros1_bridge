@@ -151,8 +151,21 @@ topics:
     topic: /krane/current_state
     type: std_msgs/msg/String
   -
+    topic: /krane/available_maps
+    type: std_msgs/msg/String
+    qos:
+      history: keep_last
+      depth: 1
+      durability: transient_local
+      reliability: reliable
+  -
     topic: /krane/active_map
     type: std_msgs/msg/String
+    qos:
+      history: keep_last
+      depth: 1
+      durability: transient_local
+      reliability: reliable
 
 services_1_to_2:
   -
