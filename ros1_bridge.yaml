@@ -166,6 +166,9 @@ topics:
       depth: 1
       durability: transient_local
       reliability: reliable
+  -
+    topic: /fitness_score
+    type: std_msgs/msg/Float32
 
 services_1_to_2:
   -
