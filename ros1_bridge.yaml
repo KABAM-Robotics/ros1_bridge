@@ -210,3 +210,7 @@ services_1_to_2:
   -
     service: /krane/load_map
     type: kabam_msgs/srv/ParamTrigger
+
+ros1_bridge:
+  parameter_bridge:
+    service_execution_timeout: 30
