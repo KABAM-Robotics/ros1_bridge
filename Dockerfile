@@ -1,11 +1,11 @@
-FROM ros:humble-ros-base-jammy
+FROM ros:jazzy-ros-base
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends g++ \
     make \
     git \
-    ros-humble-desktop \
-    ros-humble-rmw-cyclonedds-cpp && \
+    ros-jazzy-desktop \
+    ros-jazzy-rmw-cyclonedds-cpp && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -18,21 +18,28 @@ RUN apt-get install -f
 
 RUN apt-get download python3-catkin-pkg
 RUN apt-get download python3-rospkg
-RUN apt-get download python3-rosdistro
 RUN dpkg --force-overwrite -i python3-catkin-pkg*.deb
 RUN dpkg --force-overwrite -i python3-rospkg*.deb
-RUN dpkg --force-overwrite -i python3-rosdistro*.deb
 RUN apt-get install -f
 
-RUN apt-get update -y && apt-get upgrade -y
+RUN curl -sSL https://ros.packages.techfak.net/gpg.key -o /etc/apt/keyrings/ros-one-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros-one-keyring.gpg] https://ros.packages.techfak.net $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros1.list
+RUN echo "# deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros-one-keyring.gpg] https://ros.packages.techfak.net $(lsb_release -cs) main-dbg" | sudo tee -a /etc/apt/sources.list.d/ros1.list
 
+RUN apt-get update -y && apt-get install python3-rosdep -y
 
-RUN apt-get install -y ros-desktop-dev
+# Define custom rosdep package mapping
+RUN echo "yaml https://ros.packages.techfak.net/ros-one.yaml ubuntu" | sudo tee /etc/ros/rosdep/sources.list.d/1-ros-one.list
+RUN rosdep update
+
+# Install packages, e.g. ROS desktop
+RUN apt-get install ros-one-desktop python3-catkin-tools -y
 
 WORKDIR /root/ros1_ws/src
 RUN git clone https://github.com/KABAM-Robotics/kabam_msgs.git -b develop
+RUN git clone https://github.com/ros-planning/navigation_msgs.git -b ros1
 WORKDIR /root/ros1_ws
-RUN unset ROS_DISTRO && catkin_make
+RUN unset ROS_DISTRO && unset PYTHONPATH && . "/opt/ros/one/setup.sh" && catkin_make
 
 WORKDIR /home/ros_bridge/src
 COPY . ros1_bridge/
@@ -44,9 +51,9 @@ RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 RUN --mount=type=ssh vcs import src < src/ros1_bridge/ros1_bridge.repos --recursive
 
-RUN . "/root/ros1_ws/devel/setup.sh" && . /opt/ros/humble/setup.sh && colcon build --parallel-workers 4 
+RUN . "/root/ros1_ws/devel/setup.sh" && . /opt/ros/jazzy/setup.sh && colcon build --parallel-workers 4
 RUN sed -i '$isource "/root/ros1_ws/devel/setup.bash"' /ros_entrypoint.sh && sed -i '$isource "/home/ros_bridge/install/setup.bash"' /ros_entrypoint.sh
 
-CMD rosparam load /home/ros_bridge/src/ros1_bridge.yaml && ros2 run ros1_bridge parameter_bridge --bridge-all-topics
+CMD rosparam load /home/ros_bridge/src/ros1_bridge.yaml && ros2 run ros1_bridge parameter_bridge
 
 # docker build --ssh default -t 412284733352.dkr.ecr.ap-southeast-1.amazonaws.com/ros:ros1_bridge .

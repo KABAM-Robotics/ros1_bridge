@@ -11,7 +11,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 
-set(ACTION_GOAL_RESPONSE_CB_CONST_list "humble;iron")
+set(ACTION_GOAL_RESPONSE_CB_CONST_list "humble;iron;jazzy")
 if("$ENV{ROS_DISTRO}" IN_LIST ACTION_GOAL_RESPONSE_CB_CONST_list)
     #set(ACTION_GOAL_RESPONSE_CB_CONST ON)
     add_definitions("-DACTION_GOAL_RESPONSE_CB_CONST")
@@ -189,7 +189,7 @@ add_custom_command(
 if(NOT WIN32)
   # ignore warning in ROS 1 message headers
   set_source_files_properties(${generated_files}
-    PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
+    PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter -Wno-deprecated-declarations")
 endif()
 
 include_directories(include ${generated_path})
