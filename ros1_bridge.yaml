@@ -72,7 +72,7 @@ topics:
     topic: /cmd_vel
     type: geometry_msgs/msg/Twist
   -
-    topic: /cmd_vel_teleop
+    topic: /cmd_vel_user
     type: geometry_msgs/msg/Twist
   -
     topic: /cmd_mutex/override
