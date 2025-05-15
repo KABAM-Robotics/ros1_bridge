@@ -1,5 +1,19 @@
 topics:
   -
+    topic: /map_manager/map_list
+    type: kabam_msgs/msg/MapList
+    qos:
+      history: keep_last
+      durability: transient_local
+      reliability: reliable
+  -
+    topic: /map_manager/current_map_info
+    type: kabam_msgs/msg/MapInfo
+    qos:
+      history: keep_last
+      durability: transient_local
+      reliability: reliable
+  -
     topic: /tf_static
     type: tf2_msgs/msg/TFMessage
     queue_size: 1
@@ -154,14 +168,6 @@ topics:
     topic: /krane/current_state
     type: std_msgs/msg/String
   -
-    topic: /krane/available_maps
-    type: std_msgs/msg/String
-    qos:
-      history: keep_last
-      depth: 1
-      durability: transient_local
-      reliability: reliable
-  -
     topic: /krane/active_map
     type: std_msgs/msg/String
     qos:
@@ -208,11 +214,17 @@ services_1_to_2:
     service: /krane/set_state
     type: kabam_msgs/srv/ParamTrigger
   -
-    service: /krane/save_map
-    type: kabam_msgs/srv/ParamTrigger
+    service: /map_manager/start_mapping
+    type: std_srvs/srv/Trigger
   -
-    service: /krane/load_map
-    type: kabam_msgs/srv/ParamTrigger
+    service: /map_manager/stop_mapping
+    type: std_srvs/srv/Trigger
+  -
+    service: /map_manager/save_map
+    type: kabam_msgs/srv/SaveMap
+  -
+    service: /map_manager/load_map
+    type: kabam_msgs/srv/LoadMap
 
 ros1_bridge:
   parameter_bridge:
