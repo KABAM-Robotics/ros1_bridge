@@ -93,6 +93,9 @@ topics:
     topic: /plan
     type: nav_msgs/msg/Path
   -
+    topic: /plan_smoothed
+    type: nav_msgs/msg/Path
+  -
     topic: /pcl_pose
     type: geometry_msgs/msg/PoseWithCovarianceStamped
   -
