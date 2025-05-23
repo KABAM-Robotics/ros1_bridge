@@ -14,6 +14,20 @@ topics:
       durability: transient_local
       reliability: reliable
   -
+    topic: /map_manager/archived_map_list
+    type: kabam_msgs/msg/MapList
+    qos:
+      history: keep_last
+      durability: transient_local
+      reliability: reliable
+  -
+    topic: /map_manager/current_map_waypoints
+    type: kabam_msgs/msg/MapWaypointList
+    qos:
+      history: keep_last
+      durability: transient_local
+      reliability: reliable
+  -
     topic: /krane_map_annotation/update_map_annotations
     type: kabam_msgs/msg/MapAnnotationArray
   - 
@@ -247,6 +261,33 @@ services_1_to_2:
   -
     service: /map_manager/load_map
     type: kabam_msgs/srv/LoadMap
+  -
+    service: /map_manager/rename_map
+    type: kabam_msgs/srv/UpdateMap
+  -
+    service: /map_manager/update_map_image
+    type: kabam_msgs/srv/UpdateMap
+  -
+    service: /map_manager/delete_map
+    type: kabam_msgs/srv/UpdateMap
+  -
+    service: /map_manager/archive_map
+    type: kabam_msgs/srv/UpdateMap
+  -
+    service: /map_manager/create_waypoint
+    type: kabam_msgs/srv/ManageWaypoint
+  -
+    service: /map_manager/rename_waypoint
+    type: kabam_msgs/srv/ManageWaypoint
+  -
+    service: /map_manager/reposition_waypoint
+    type: kabam_msgs/srv/ManageWaypoint
+  -
+    service: /map_manager/delete_waypoint
+    type: kabam_msgs/srv/ManageWaypoint
+  -
+    service: /map_manager/get_waypoint
+    type: kabam_msgs/srv/GetWaypoint
 
 ros1_bridge:
   parameter_bridge:
