@@ -184,17 +184,6 @@ topics:
     topic: /halo_aux/led_status
     type: diagnostic_msgs/msg/DiagnosticArray
   -
-    topic: /krane/smartplus/update_map_annotations
-    type: visualization_msgs/msg/MarkerArray
-  -
-    topic: /krane/map_annotations/no_go_zones
-    type: visualization_msgs/msg/MarkerArray
-    qos:
-      history: keep_last
-      depth: 1
-      durability: transient_local
-      reliability: reliable
-  -
     topic: /autodock_action/status
     type: actionlib_msgs/msg/GoalStatusArray
   -

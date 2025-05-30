@@ -17,3 +17,21 @@
   response_fields_1_to_2:
     success: success
     message: message
+-
+  ros1_package_name: 'kabam_msgs'
+  ros1_message_name: 'MapAnnotation'
+  ros2_package_name: 'kabam_msgs'
+  ros2_message_name: 'MapAnnotation'
+  fields_1_to_2:
+    type: type
+    ns: ns
+    shape: shape
+    coords: coords
+    params: params
+-
+  ros1_package_name: 'kabam_msgs'
+  ros1_message_name: 'MapAnnotationArray'
+  ros2_package_name: 'kabam_msgs'
+  ros2_message_name: 'MapAnnotationArray'
+  fields_1_to_2:
+    annotations: annotations
