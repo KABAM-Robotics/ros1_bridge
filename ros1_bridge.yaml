@@ -152,6 +152,42 @@ topics:
     topic: /halo_control/mcu_state
     type: std_msgs/msg/Int32
   -
+    topic: /ultrasonic0
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic1
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic2
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic3
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic4
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic5
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic6
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic7
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic8
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic9
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic10
+    type: sensor_msgs/msg/Range
+  -
+    topic: /ultrasonic11
+    type: sensor_msgs/msg/Range
+  -
     topic: /halo_control/door_open
     type: std_msgs/msg/Bool
   -

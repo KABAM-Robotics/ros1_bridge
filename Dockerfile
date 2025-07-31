@@ -10,7 +10,6 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 
 
-RUN mv /etc/apt/sources.list.d/ros2-latest.list /root/
 RUN apt-get update -y
 
 RUN sed  -i -e 's|^Conflicts: catkin|#Conflicts: catkin|' /var/lib/dpkg/status
@@ -36,7 +35,12 @@ RUN rosdep update
 RUN apt-get install ros-one-desktop python3-catkin-tools -y
 
 WORKDIR /root/ros1_ws/src
-RUN git clone https://github.com/KABAM-Robotics/kabam_msgs.git -b develop
+
+# Use your computers ssh to build docker
+RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts && \
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+RUN git clone https://github.com/KABAM-Robotics/kabam_msgs.git -b main
 RUN git clone https://github.com/ros-planning/navigation_msgs.git -b ros1
 WORKDIR /root/ros1_ws
 RUN unset ROS_DISTRO && unset PYTHONPATH && . "/opt/ros/one/setup.sh" && catkin_make

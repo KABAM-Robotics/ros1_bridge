@@ -446,8 +446,16 @@ int main(int argc, char * argv[])
 
   // ROS 2 spinning loop
   rclcpp::executors::SingleThreadedExecutor executor;
-  while (ros1_node.ok() && rclcpp::ok()) {
-    executor.spin_node_once(ros2_node, std::chrono::milliseconds(1000));
+  while (true) {
+    if (ros1_node.ok() && rclcpp::ok() && ros::master::check())
+    {
+      executor.spin_node_once(ros2_node, std::chrono::milliseconds(1000));
+    }
+    else
+    {
+      fprintf(stderr, "ROS 1 or ROS 2 node is not ok, or lost contact with rosmaster exiting...\n");
+      exit(1);
+    }
   }
 
   return 0;
