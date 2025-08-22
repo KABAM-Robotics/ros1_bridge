@@ -229,15 +229,74 @@ rclcpp::QoS qos_from_params(XmlRpc::XmlRpcValue qos_params)
   return ros2_publisher_qos;
 }
 
+// To split 
+std::vector<std::string> split_args(const std::string &s) {
+    std::vector<std::string> tokens;
+    std::istringstream iss(s);
+    std::string token;
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
+void make_argv(const std::vector<std::string>& args, std::vector<char*>& argv_out) {
+    argv_out.clear();
+    for (auto &s : args) {
+        argv_out.push_back(strdup(s.c_str()));
+    }
+}
+
+
+
 int main(int argc, char * argv[])
 {
-  // ROS 1 node
-  ros::init(argc, argv, "ros_bridge");
-  ros::NodeHandle ros1_node;
 
-  // ROS 2 node
-  rclcpp::init(argc, argv);
+  if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " \"<ros2_args | ros1_args>\"\n";
+        return 1;
+  }
+
+  std::string combined = argv[1];
+  size_t delim = combined.find('|');
+
+  std::string ros2_str = (delim == std::string::npos) ? combined : combined.substr(0, delim);
+  std::string ros1_str = (delim == std::string::npos) ? "" : combined.substr(delim + 1);
+
+  auto ros2_args = split_args(ros2_str);
+  auto ros1_args = split_args(ros1_str);
+
+  std::vector<char*> ros2_argv, ros1_argv;
+  make_argv(ros2_args, ros2_argv);
+  make_argv(ros1_args, ros1_argv);
+
+  int ros2_argc = ros2_argv.size();
+  int ros1_argc = ros1_argv.size();
+
+   // Extract ROS2 namespace if provided: __ns:=/my_ns
+  std::string ros2_ns = "";
+  for (auto &arg : ros2_args) {
+      const std::string ns_prefix = "__ns:=";
+      if (arg.find(ns_prefix) == 0) {
+          ros2_ns = arg.substr(ns_prefix.length());
+          break;
+      }
+  }
+
+  // --- Init ROS 2 ---
+  rclcpp::init(ros2_argc, ros2_argv.data());
   auto ros2_node = rclcpp::Node::make_shared("ros_bridge");
+  std::cout << "ROS2 Node initialized with namespace: " << ros2_ns << std::endl;
+
+  // --- Init ROS 1 ---
+  std::string ros1_ns = ros2_ns.empty() ? "/" : ros2_ns;
+  ros::init(ros1_argc, ros1_argv.data(), "ros_bridge");
+  ros::NodeHandle ros1_node(ros1_ns.c_str());
+  std::cout << "ROS1 Node initialized with namespace: " << ros1_ns << std::endl;
+
+  // free strdup memory
+  for (auto ptr : ros2_argv) free(ptr);
+  for (auto ptr : ros1_argv) free(ptr);
 
   std::list<ros1_bridge::BridgeHandles> all_handles;
   std::list<ros1_bridge::ServiceBridge1to2> service_bridges_1_to_2;
@@ -249,24 +308,16 @@ int main(int argc, char * argv[])
   // topic: the name of the topic to bridge (e.g. '/topic_name')
   // type: the type of the topic to bridge (e.g. 'pkgname/msg/MsgName')
   // queue_size: the queue size to use (default: 100)
-  const char * topics_parameter_name = "topics";
+  std::string topics_parameter_name = ros2_ns.empty() ? "topics" : ros2_ns + "/topics";
   // the services parameters need to be arrays
   // and each item needs to be a dictionary with the following keys;
   // service: the name of the service to bridge (e.g. '/service_name')
   // type: the type of the service to bridge (e.g. 'pkgname/srv/SrvName')
-  const char * services_1_to_2_parameter_name = "services_1_to_2";
-  const char * services_2_to_1_parameter_name = "services_2_to_1";
-  const char * service_execution_timeout_parameter_name =
-    "ros1_bridge/parameter_bridge/service_execution_timeout";
-  if (argc > 1) {
-    topics_parameter_name = argv[1];
-  }
-  if (argc > 2) {
-    services_1_to_2_parameter_name = argv[2];
-  }
-  if (argc > 3) {
-    services_2_to_1_parameter_name = argv[3];
-  }
+  std::string services_1_to_2_parameter_name = ros2_ns.empty() ? "services_1_to_2" : ros2_ns + "/services_1_to_2";
+  std::string services_2_to_1_parameter_name = ros2_ns.empty() ? "services_2_to_1" : ros2_ns + "/services_2_to_1";
+  std::string service_execution_timeout_parameter_name = ros2_ns.empty() ? 
+      "ros1_bridge/parameter_bridge/service_execution_timeout" : 
+      ros2_ns + "/ros1_bridge/parameter_bridge/service_execution_timeout";
 
   // Topics
   XmlRpc::XmlRpcValue topics;
@@ -310,7 +361,7 @@ int main(int argc, char * argv[])
   } else {
     fprintf(
       stderr,
-      "The parameter '%s' either doesn't exist or isn't an array\n", topics_parameter_name);
+      "The parameter '%s' either doesn't exist or isn't an array\n", topics_parameter_name.c_str());
   }
 
   // ROS 1 Services in ROS 2
@@ -375,7 +426,7 @@ int main(int argc, char * argv[])
     fprintf(
       stderr,
       "The parameter '%s' either doesn't exist or isn't an array\n",
-      services_1_to_2_parameter_name);
+      services_1_to_2_parameter_name.c_str());
   }
 
   // ROS 2 Services in ROS 1
@@ -437,7 +488,7 @@ int main(int argc, char * argv[])
     fprintf(
       stderr,
       "The parameter '%s' either doesn't exist or isn't an array\n",
-      services_2_to_1_parameter_name);
+      services_2_to_1_parameter_name.c_str());
   }
 
   // ROS 1 asynchronous spinner
