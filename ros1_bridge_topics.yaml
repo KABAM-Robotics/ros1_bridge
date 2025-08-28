@@ -28,21 +28,10 @@ topics:
       durability: transient_local
       reliability: reliable
   -
-    topic: /krane_map_annotation/update_map_annotations
+    topic: /map_manager/set_annotations
     type: kabam_msgs/msg/MapAnnotationArray
   - 
-    topic: /krane_map_annotation/smartplus/update_map_annotations
-    type: kabam_msgs/msg/MapAnnotationArray 
-  - 
-    topic: /krane_map_annotation/no_go_zones
-    type: kabam_msgs/msg/MapAnnotationArray
-    qos:
-      history: keep_last
-      depth: 1
-      durability: transient_local
-      reliability: reliable
-  - 
-    topic: /krane_map_annotation/speed_limit_zones
+    topic: /map_manager/current_map_annotations
     type: kabam_msgs/msg/MapAnnotationArray
     qos:
       history: keep_last
