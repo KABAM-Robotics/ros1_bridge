@@ -76,8 +76,8 @@ create_bridge_from_2_to_1(
   const std::string & ros1_type_name,
   const std::string & ros1_topic_name,
   size_t publisher_queue_size,
-  rclcpp::PublisherBase::SharedPtr ros2_pub,
-  bool latch)
+  rclcpp::PublisherBase::SharedPtr ros2_pub
+  )
 {
   auto subscriber_qos = rclcpp::SensorDataQoS(rclcpp::KeepLast(subscriber_queue_size));
   return create_bridge_from_2_to_1(
@@ -89,8 +89,8 @@ create_bridge_from_2_to_1(
     ros1_type_name,
     ros1_topic_name,
     publisher_queue_size,
-    ros2_pub,
-    latch);
+    ros2_pub
+    );
 }
 
 Bridge2to1Handles
@@ -103,10 +103,21 @@ create_bridge_from_2_to_1(
   const std::string & ros1_type_name,
   const std::string & ros1_topic_name,
   size_t publisher_queue_size,
-  rclcpp::PublisherBase::SharedPtr ros2_pub,
-  bool latch)
+  rclcpp::PublisherBase::SharedPtr ros2_pub
+  )
 {
+  rclcpp::QoS subscriber_qos_copy = subscriber_qos;
   auto factory = get_factory(ros1_type_name, ros2_type_name);
+  // If QoS has durability of transient local, then the subscriber_qos should be latching
+  bool latch = subscriber_qos_copy.durability() == rclcpp::DurabilityPolicy::TransientLocal;
+  RCLCPP_INFO(
+    ros2_node->get_logger(), "Durability policy for topic %s: %s",
+    ros2_topic_name.c_str(), subscriber_qos_copy.durability() == rclcpp::DurabilityPolicy::TransientLocal ? "transient local" : "volatile");
+  // If the name of the topic is /tf_static, then the subscriber_qos should be keep_all and transient_local
+  if (ros2_topic_name == "/tf_static") {
+    subscriber_qos_copy.keep_all();
+    subscriber_qos_copy.durability(rclcpp::DurabilityPolicy::TransientLocal);
+  }
   // If subscriber_qos has durability of transient local, then the publisher_qos should be latching
   if (latch) {
     RCLCPP_INFO(
@@ -116,7 +127,7 @@ create_bridge_from_2_to_1(
   auto ros1_pub = factory->create_ros1_publisher(
     ros1_node, ros1_topic_name, publisher_queue_size, latch);
   auto ros2_sub = factory->create_ros2_subscriber(
-    ros2_node, ros2_topic_name, subscriber_qos, ros1_pub, ros2_pub);
+    ros2_node, ros2_topic_name, subscriber_qos_copy, ros1_pub, ros2_pub);
 
   Bridge2to1Handles handles;
   handles.ros2_subscriber = ros2_sub;
@@ -143,7 +154,7 @@ create_bidirectional_bridge(
   handles.bridge2to1 = create_bridge_from_2_to_1(
     ros2_node, ros1_node,
     ros2_type_name, topic_name, queue_size, ros1_type_name, topic_name, queue_size,
-    handles.bridge1to2.ros2_publisher, false);
+    handles.bridge1to2.ros2_publisher);
   return handles;
 }
 
@@ -161,16 +172,7 @@ create_bidirectional_bridge(
   RCLCPP_INFO(
     ros2_node->get_logger(), "create bidirectional bridge for topic %s",
     topic_name.c_str());
-  // If QoS has durability of transient local, then the subscriber_qos should be latching
-  bool latch = subscriber_qos.durability() == rclcpp::DurabilityPolicy::TransientLocal;
-  RCLCPP_INFO(
-    ros2_node->get_logger(), "Durability policy for topic %s: %s",
-    topic_name.c_str(), subscriber_qos.durability() == rclcpp::DurabilityPolicy::TransientLocal ? "transient local" : "volatile");
-  // If the name of the topic is /tf_static, then the subscriber_qos should be keep_all and transient_local
-  if (topic_name == "/tf_static") {
-    subscriber_qos.keep_all();
-    subscriber_qos.durability(rclcpp::DurabilityPolicy::TransientLocal);
-  }
+
   BridgeHandles handles;
   handles.bridge1to2 = create_bridge_from_1_to_2(
     ros1_node, ros2_node,
@@ -178,7 +180,7 @@ create_bidirectional_bridge(
   handles.bridge2to1 = create_bridge_from_2_to_1(
     ros2_node, ros1_node,
     ros2_type_name, topic_name, subscriber_qos, ros1_type_name, topic_name, queue_size,
-    handles.bridge1to2.ros2_publisher, latch);
+    handles.bridge1to2.ros2_publisher);
   return handles;
 }
 

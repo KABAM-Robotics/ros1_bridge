@@ -1,4 +1,4 @@
-topics:
+topics_2_to_1:
   -
     topic: /map_manager/map_list
     type: kabam_msgs/msg/MapList
@@ -95,9 +95,6 @@ topics:
   -
     topic: /rosout
     type: rcl_interfaces/msg/Log
-  -
-    topic: /goal_pose
-    type: geometry_msgs/msg/PoseStamped
   -
     topic: /diagnostics
     type: diagnostic_msgs/msg/DiagnosticArray
@@ -229,8 +226,14 @@ topics:
     topic: /fitness_score
     type: std_msgs/msg/Float32
 
-services_1_to_2: []
+topics_1_to_2:
+  -
+    topic: /goal_pose
+    type: geometry_msgs/msg/PoseStamped
 
+
+topics: []
+services_1_to_2: []
 services_2_to_1: []
 
 ros1_bridge:

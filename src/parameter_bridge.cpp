@@ -308,7 +308,9 @@ int main(int argc, char * argv[])
   // topic: the name of the topic to bridge (e.g. '/topic_name')
   // type: the type of the topic to bridge (e.g. 'pkgname/msg/MsgName')
   // queue_size: the queue size to use (default: 100)
-  std::string topics_parameter_name = ros2_ns.empty() ? "topics" : ros2_ns + "/topics";
+  std::string topics_1_to_2_parameter_name = ros2_ns.empty() ? "topics" : ros2_ns + "/topics_1_to_2";  // bridge's ros1 subscribes, bridge's ros2 publishes (sending message from ROS1 to ROS2 )
+  std::string topics_2_to_1_parameter_name = ros2_ns.empty() ? "topics" : ros2_ns + "/topics_2_to_1";  // bridge's ros2 subscribes, bridge's ros1 publishes (sending message from ROS2 to ROS1 )
+  std::string topics_parameter_name = ros2_ns.empty() ? "topics" : ros2_ns + "/topics"; // bidirectional
   // the services parameters need to be arrays
   // and each item needs to be a dictionary with the following keys;
   // service: the name of the service to bridge (e.g. '/service_name')
@@ -319,7 +321,103 @@ int main(int argc, char * argv[])
       "ros1_bridge/parameter_bridge/service_execution_timeout" : 
       ros2_ns + "/ros1_bridge/parameter_bridge/service_execution_timeout";
 
-  // Topics
+  // ROS1 Topics in ROS2
+  XmlRpc::XmlRpcValue topics_1_to_2;
+  if (
+    ros1_node.getParam(topics_1_to_2_parameter_name, topics_1_to_2) &&
+    topics_1_to_2.getType() == XmlRpc::XmlRpcValue::TypeArray)
+  {
+    for (size_t i = 0; i < static_cast<size_t>(topics_1_to_2.size()); ++i) {
+      std::string topic_name = static_cast<std::string>(topics_1_to_2[i]["topic"]);
+      std::string type_name = static_cast<std::string>(topics_1_to_2[i]["type"]);
+      size_t queue_size = static_cast<int>(topics_1_to_2[i]["queue_size"]);
+      if (!queue_size) {
+        queue_size = 100;
+      }
+      fprintf(stderr,
+        "Trying to create One Directional bridge from ROS1 to ROS2 for topic '%s' "
+        "with ROS 2 type '%s'\n",
+        topic_name.c_str(), type_name.c_str());
+
+      try {
+        if (topics_1_to_2[i].hasMember("qos")) {
+          fprintf(stderr, "Setting up QoS for '%s': ", topic_name.c_str());
+          auto qos_settings = qos_from_params(topics_1_to_2[i]["qos"]);
+          fprintf(stderr, "\n");
+          ros1_bridge::BridgeHandles handles;
+          handles.bridge1to2 = ros1_bridge::create_bridge_from_1_to_2(
+            ros1_node, ros2_node, "" , topic_name, queue_size, type_name, topic_name, qos_settings);
+          all_handles.push_back(handles);
+        } else {
+            ros1_bridge::BridgeHandles handles;
+            handles.bridge1to2 = ros1_bridge::create_bridge_from_1_to_2(
+              ros1_node, ros2_node, "" , topic_name, queue_size, type_name, topic_name, queue_size);
+            all_handles.push_back(handles);
+          }
+        }
+      catch (std::runtime_error & e) {
+        fprintf(
+          stderr,
+          "failed to create One Directional bridge from ROS1 to ROS2 for topic '%s' "
+          "with ROS 2 type '%s': %s\n",
+          topic_name.c_str(), type_name.c_str(), e.what());
+      }
+    }
+  } else {
+    fprintf(
+      stderr,
+      "The parameter '%s' either doesn't exist or isn't an array\n", topics_1_to_2_parameter_name.c_str());
+  }
+
+  // ROS2 Topics in ROS1
+  XmlRpc::XmlRpcValue topics_2_to_1;
+  if (
+    ros1_node.getParam(topics_2_to_1_parameter_name, topics_2_to_1) &&
+    topics_2_to_1.getType() == XmlRpc::XmlRpcValue::TypeArray)
+  {
+    for (size_t i = 0; i < static_cast<size_t>(topics_2_to_1.size()); ++i) {
+      std::string topic_name = static_cast<std::string>(topics_2_to_1[i]["topic"]);
+      std::string type_name = static_cast<std::string>(topics_2_to_1[i]["type"]);
+      size_t queue_size = static_cast<int>(topics_2_to_1[i]["queue_size"]);
+      if (!queue_size) {
+        queue_size = 100;
+      }
+      fprintf(stderr,
+        "Trying to create One Directional bridge from ROS2 to ROS1 for topic '%s' "
+        "with ROS 2 type '%s'\n",
+        topic_name.c_str(), type_name.c_str());
+
+      try {
+        if (topics_2_to_1[i].hasMember("qos")) {
+          fprintf(stderr, "Setting up QoS for '%s': ", topic_name.c_str());
+          auto qos_settings = qos_from_params(topics_2_to_1[i]["qos"]);
+          fprintf(stderr, "\n");
+          ros1_bridge::BridgeHandles handles;
+          handles.bridge2to1 = ros1_bridge::create_bridge_from_2_to_1(
+            ros2_node, ros1_node, type_name, topic_name, qos_settings, "", topic_name, queue_size, nullptr);
+          all_handles.push_back(handles);
+        } else {
+          ros1_bridge::BridgeHandles handles;
+          handles.bridge2to1 = ros1_bridge::create_bridge_from_2_to_1(
+          ros2_node, ros1_node, type_name, topic_name, queue_size, "", topic_name, queue_size, nullptr);
+          all_handles.push_back(handles);
+          }
+        }
+      catch (std::runtime_error & e) {
+        fprintf(
+          stderr,
+          "failed to create One Directional bridge from ROS2 to ROS1 for topic '%s' "
+          "with ROS 2 type '%s': %s\n",
+          topic_name.c_str(), type_name.c_str(), e.what());
+      }
+    }
+  } else {
+    fprintf(
+      stderr,
+      "The parameter '%s' either doesn't exist or isn't an array\n", topics_2_to_1_parameter_name.c_str());
+  }
+
+  // Bidirectional Topics
   XmlRpc::XmlRpcValue topics;
   if (
     ros1_node.getParam(topics_parameter_name, topics) &&
@@ -343,11 +441,11 @@ int main(int argc, char * argv[])
           auto qos_settings = qos_from_params(topics[i]["qos"]);
           fprintf(stderr, "\n");
           ros1_bridge::BridgeHandles handles = ros1_bridge::create_bidirectional_bridge(
-            ros1_node, ros2_node, "", type_name, topic_name, queue_size, qos_settings);
+          ros1_node, ros2_node, "", type_name, topic_name, queue_size, qos_settings);
           all_handles.push_back(handles);
         } else {
           ros1_bridge::BridgeHandles handles = ros1_bridge::create_bidirectional_bridge(
-            ros1_node, ros2_node, "", type_name, topic_name, queue_size);
+          ros1_node, ros2_node, "", type_name, topic_name, queue_size);
           all_handles.push_back(handles);
         }
       } catch (std::runtime_error & e) {
