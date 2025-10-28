@@ -3,77 +3,12 @@ topics_2_to_1: []
 topics: []
 services_1_to_2:
   -
-    service: /halo_control/release  # ROS 2 service name
+    service: /robot/led_on  # ROS 2 service name
     type: std_srvs/srv/Trigger  # The ROS 2 service type name
   -
-    service: /halo_aux/on_led
+    service: /robot/led_off
     type: std_srvs/srv/Trigger
-  -
-    service: /halo_aux/off_led
-    type: std_srvs/srv/Trigger
-  -
-    service: /halo_aux/on_siren
-    type: std_srvs/srv/Trigger
-  -
-    service: /halo_aux/off_siren
-    type: std_srvs/srv/Trigger
-  -
-    service: /halo_aux/off_aux
-    type: std_srvs/srv/Trigger
-  -
-    service: /simple_autodock/dock
-    type: std_srvs/srv/Trigger
-  -
-    service: /annotation_state/on
-    type: std_srvs/srv/Trigger
-  -
-    service: /annotation_state/off
-    type: std_srvs/srv/Trigger
-  -
-    service: /annotation_param_service/y_offset
-    type: kabam_msgs/srv/ParamTrigger
-  -
-    service: /krane/set_state
-    type: kabam_msgs/srv/ParamTrigger
-  -
-    service: /map_manager/start_mapping
-    type: std_srvs/srv/Trigger
-  -
-    service: /map_manager/stop_mapping
-    type: std_srvs/srv/Trigger
-  -
-    service: /map_manager/save_map
-    type: kabam_msgs/srv/SaveMap
-  -
-    service: /map_manager/load_map
-    type: kabam_msgs/srv/LoadMap
-  -
-    service: /map_manager/rename_map
-    type: kabam_msgs/srv/UpdateMap
-  -
-    service: /map_manager/update_map_image
-    type: kabam_msgs/srv/UpdateMap
-  -
-    service: /map_manager/delete_map
-    type: kabam_msgs/srv/UpdateMap
-  -
-    service: /map_manager/archive_map
-    type: kabam_msgs/srv/UpdateMap
-  -
-    service: /map_manager/create_waypoint
-    type: kabam_msgs/srv/ManageWaypoint
-  -
-    service: /map_manager/rename_waypoint
-    type: kabam_msgs/srv/ManageWaypoint
-  -
-    service: /map_manager/reposition_waypoint
-    type: kabam_msgs/srv/ManageWaypoint
-  -
-    service: /map_manager/delete_waypoint
-    type: kabam_msgs/srv/ManageWaypoint
-  -
-    service: /map_manager/get_waypoint
-    type: kabam_msgs/srv/GetWaypoint
+
 
 services_2_to_1: []
 

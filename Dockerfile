@@ -60,4 +60,4 @@ RUN sed -i '$isource "/root/ros1_ws/devel/setup.bash"' /ros_entrypoint.sh && sed
 
 CMD rosparam load /home/ros_bridge/src/ros1_bridge.yaml && ros2 run ros1_bridge parameter_bridge
 
-# docker build --ssh default -t 412284733352.dkr.ecr.ap-southeast-1.amazonaws.com/ros:ros1_bridge .
+# docker build --ssh default -t ros1_bridge .
