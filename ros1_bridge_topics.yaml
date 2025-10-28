@@ -33,6 +33,11 @@ topics_2_to_1:
       durability: transient_local
       reliability: reliable
 
+topics_1_to_2:
+  -
+    topic: /goal_pose
+    type: geometry_msgs/msg/PoseStamped
+
 ros1_bridge:
   parameter_bridge:
     service_execution_timeout: 60

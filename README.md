@@ -1,6 +1,6 @@
 # Bridge communication between ROS 1 and ROS 2
 
-This package provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2.
+This package provides a network bridge which enables the exchange of messages between ROS 1 and ROS 2. As KABAM Robotics we have forked this repository and made changes to tailor it to be more production grade and stable.
 
 The bridge is currently implemented in C++ as at the time the Python API for ROS 2 had not been developed.
 Because of this its support is limited to only the message/service types available at compile time of the bridge.
@@ -16,6 +16,15 @@ On the ROS 1 side `rostopic echo` doesn't have an option to specify the topic ty
 Therefore it can't be used with the dynamic bridge if no other subscribers are present.
 As an alternative you can use the `--bridge-all-2to1-topics` option to bridge all ROS 2 topics to ROS 1 so that tools such as `rostopic echo`, `rostopic list` and `rqt` will see the topics even if there are no matching ROS 1 subscribers.
 Run `ros2 run ros1_bridge dynamic_bridge -- --help` for more options.
+
+## What is different from the original ros1_bridge?
+
+- Add topic directionailty
+- Support actions
+- Various fixes
+- Stricter checks on rosmaster health
+- Run with Ubuntu 24.04 and ROS One!
+
 
 ## Prerequisites
 
@@ -499,6 +508,23 @@ topics:
       liveliness_lease_duration:
           secs: 40
           nsecs: 5678
+```
+
+Or you can add directional topics as follows:
+```yaml
+topics_2_to_1:
+  -
+    topic: /tf_static
+    type: tf2_msgs/msg/TFMessage
+    queue_size: 1
+    qos:
+      history: keep_last
+      depth: 100
+      durability: transient_local
+topics_1_to_2:
+  -
+    topic: /goal_pose
+    type: geometry_msgs/msg/PoseStamped
 ```
 
 Note that the `qos` section can be omitted entirely and options not set are left default.
